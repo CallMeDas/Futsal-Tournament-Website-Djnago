@@ -4,6 +4,24 @@
 {% load static %}
 
 
+<div class="container mt-5">
+    <h1 class="text-center">Teams</h1>
+    <div class="row">
+        {% for team in teams %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Team Name: {{ team.name | capfirst}}</h5>
+                    <p class="card-text">Capain Name: {{ team.captain_name | capfirst}}</p>
+                    <p class="card-text">Phone No: {{ team.captain_phone_number }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <a class="btn btn-primary" href="/">Back to Home</a>
+</div>
+
 
 
 

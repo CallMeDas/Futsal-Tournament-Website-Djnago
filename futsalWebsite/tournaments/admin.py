@@ -25,5 +25,6 @@ class PlayerAdmin(admin.ModelAdmin):
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
     list_display = ('team1', 'team2', 'date', 'is_completed', 'is_penalty')
+    fields = ('team1', 'team2', 'date', 'is_penalty', 'is_completed', 'penalty_team1', 'penalty_team2')
 
     actions = ['start_penalty_shootout']
