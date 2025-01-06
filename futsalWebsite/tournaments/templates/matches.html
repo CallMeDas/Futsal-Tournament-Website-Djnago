@@ -1,67 +1,75 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% load static %}
-
-
 <div class="container mt-5">
-    <h1 class="text-center">Matches</h1>
-    <table class="table table-striped table-bordered">
+    <h1 class="text-center">Match Schedule</h1>
+    <table class="table table-bordered table-striped">
         <thead class="thead-dark">
             <tr>
+                <th>Round</th>
                 <th>Match</th>
                 <th>Date</th>
                 <th>Status</th>
+                <th>Score</th>
+                <th>Penalty</th>
             </tr>
         </thead>
         <tbody>
-            {% for match in matches %}
-            <tr>
-                {% if match.is_completed %}
-                    <td>
-                        {{ match.team1 }} vs {{ match.team2 }} 
-                        ({{ match.score_team1 }} - {{ match.score_team2 }})
-                        {% if match.is_penalty %}
-                            <div>
-                                <strong>Penalty:</strong>
-                                <br>
-                                <span>{{ match.team1 }}:</span>
-                                {% for penalty in match.penalty_team1 %}
-                                    {% if penalty == '1' %}
-                                        <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Goal -->
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Miss -->
-                                    {% endif %}
-                                {% endfor %}
-                                <br>
-                                <span>{{ match.team2 }}:</span>
-                                {% for penalty in match.penalty_team2 %}
-                                    {% if penalty == '1' %}
-                                        <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Goal -->
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Miss -->
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+            {% for round, matches in grouped_matches.items %}
+                {% for match in matches %}
+                    <tr>
+                        {% if forloop.first %}
+                            <!-- Merge the "Round" cell for grouped matches -->
+                            <td rowspan="{{ matches|length }}">{{ round }}</td>
                         {% endif %}
-                    </td>
-                    <td>{{ match.date }}</td>
-                    <td>
-                        <span class="badge bg-success">Completed</span>
-                    </td>
-                {% else %}
-                    <td>{{ match.team1 }} vs {{ match.team2 }}</td>
-                    <td>{{ match.date }}</td>
-                    <td>
-                        <span class="badge bg-warning">Upcoming</span>
-                    </td>
-                {% endif %}
-            </tr>
+                        <td>{{ match.team1 }} vs {{ match.team2 }}</td>
+                        <td>{{ match.date|date:"F d, Y H:i" }}</td>
+                        <td>
+                            {% if match.is_completed %}
+                                <span class="badge bg-success">Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning">Upcoming</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if match.is_completed %}
+                                {{ match.score_team1 }} - {{ match.score_team2 }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if match.is_penalty %}
+                                <div>
+                                    <strong>{{ match.team1 }}:</strong>
+                                    {% for penalty in match.penalty_team1 %}
+                                        {% if penalty == '1' %}
+                                            <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"></span>
+                                        {% else %}
+                                            <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"></span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <br>
+                                    <strong>{{ match.team2 }}:</strong>
+                                    {% for penalty in match.penalty_team2 %}
+                                        {% if penalty == '1' %}
+                                            <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"></span>
+                                        {% else %}
+                                            <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"></span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
             {% endfor %}
         </tbody>
     </table>
-    
-    <a class="btn btn-primary" href="/">Back to Home</a>
+    <div class="text-center mt-4">
+        <a class="btn btn-primary" href="/">Back to Home</a>
+    </div>
 </div>
-
 {% endblock %}

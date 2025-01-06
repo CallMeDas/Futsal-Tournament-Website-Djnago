@@ -21,10 +21,14 @@ class PlayerAdmin(admin.ModelAdmin):
     search_fields = ('name', 'team') 
     list_filter = ('team',)
 
-# Match Admin
+# admin.py
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('team1', 'team2', 'date', 'is_completed', 'is_penalty')
-    fields = ('team1', 'team2', 'date', 'is_penalty', 'is_completed', 'penalty_team1', 'penalty_team2')
+    list_display = ('team1', 'team2', 'date', 'round', 'is_completed', 'is_penalty')
+    fields = ('team1', 'team2', 'date', 'round', 'is_penalty', 'is_completed', 'penalty_team1', 'penalty_team2')
 
-    actions = ['start_penalty_shootout']
+    def save_model(self, request, obj, form, change):
+        if obj.is_penalty:
+            if not obj.penalty_team1 or not obj.penalty_team2:
+                self.message_user(request, "Penalty details are required for both teams.", level="error")
+        super().save_model(request, obj, form, change)
