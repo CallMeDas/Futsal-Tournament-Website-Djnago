@@ -27,19 +27,19 @@
                                 <br>
                                 <span>{{ match.team1 }}:</span>
                                 {% for penalty in match.penalty_team1 %}
-                                    {% if penalty.scored %}
-                                        <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"> </span>
+                                    {% if penalty == '1' %}
+                                        <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Goal -->
                                     {% else %}
-                                        <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"> </span>
+                                        <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Miss -->
                                     {% endif %}
                                 {% endfor %}
                                 <br>
                                 <span>{{ match.team2 }}:</span>
                                 {% for penalty in match.penalty_team2 %}
-                                    {% if penalty.scored %}
-                                        <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"> </span>
+                                    {% if penalty == '1' %}
+                                        <span class="badge bg-success rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Goal -->
                                     {% else %}
-                                        <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"> </span>
+                                        <span class="badge bg-danger rounded-circle" style="width: 12px; height: 12px;"> </span> <!-- Miss -->
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -60,6 +60,7 @@
             {% endfor %}
         </tbody>
     </table>
+    
     <a class="btn btn-primary" href="/">Back to Home</a>
 </div>
 

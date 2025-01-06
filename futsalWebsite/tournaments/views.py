@@ -5,8 +5,14 @@ from .models import Team, Match
 def home (request):
     return render(request, 'index.html')
 
-def matches (request):
+def matches(request):
     matches = Match.objects.all()
+    for match in matches:
+        # Split penalty data into lists if penalties exist
+        if match.penalty_team1:
+            match.penalty_team1 = match.penalty_team1.split(',')  # Split on commas
+        if match.penalty_team2:
+            match.penalty_team2 = match.penalty_team2.split(',')
     return render(request, 'matches.html', {'matches': matches})
 
 def teams (request):
