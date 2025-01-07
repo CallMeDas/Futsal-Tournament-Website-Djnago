@@ -7,22 +7,19 @@ def home(request):
     return render(request, 'index.html')
 
 # Matches View
+from collections import defaultdict  # Add this line
+from django.shortcuts import render
+from .models import Match
+
 def matches(request):
-    matches = Match.objects.all().order_by('date')
-    grouped_matches = defaultdict(list)
-
+    matches = Match.objects.all()
     for match in matches:
-        # Group matches by round
-        grouped_matches[match.round].append(match)
-
-        # Process penalties if they exist
+        # Split penalty data into lists if penalties exist
         if match.penalty_team1:
-            match.penalty_team1 = match.penalty_team1.split(',')
+            match.penalty_team1 = match.penalty_team1.split(',')  # Split on commas
         if match.penalty_team2:
             match.penalty_team2 = match.penalty_team2.split(',')
-
-    return render(request, 'matches.html', {'grouped_matches': grouped_matches})
-
+    return render(request, 'matches.html', {'matches': matches})
 # Teams View
 def teams(request):
     teams = Team.objects.all()
