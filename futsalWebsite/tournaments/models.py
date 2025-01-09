@@ -49,49 +49,52 @@ class Match(models.Model):
     penalty_team2 = models.CharField(max_length=100, blank=True, null=True)
 
     round = models.CharField(max_length=20, choices=ROUND_CHOICES, default='Group Stage')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Upcoming')  # New field
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Upcoming')
 
     def clean(self):
         if self.is_penalty:
             if not self.penalty_team1 or not self.penalty_team2:
                 raise ValidationError("Penalty data must be provided for both teams if penalties apply.")
+            try:
+                # Validate penalty scores format
+                [int(score.strip()) for score in self.penalty_team1.strip("[]").split(',')]
+                [int(score.strip()) for score in self.penalty_team2.strip("[]").split(',')]
+            except ValueError:
+                raise ValidationError("Penalty data must be a comma-separated list of integers.")
         else:
             self.penalty_team1 = None
             self.penalty_team2 = None
 
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.team1} vs {self.team2} on {self.date} ({self.round})"
+    def get_winner(self):
+        if not self.is_completed:
+            return "Match not completed"
 
-def get_winner(self):
-    # Ensure penalty fields are strings before splitting
-    try:
-        penalty_team1_scores = (
-            [int(score) for score in self.penalty_team1.split(',')]
-            if self.penalty_team1 else []
-        )
-    except ValueError:
-        penalty_team1_scores = []
+        # Helper function to parse penalty strings
+        def parse_penalty_scores(penalty_data):
+            if not penalty_data:
+                return []
+            try:
+                # Strip unwanted characters and split into integers
+                return [int(score.strip()) for score in penalty_data.strip("[]").split(',')]
+            except ValueError:
+                raise ValidationError(f"Invalid penalty data: {penalty_data}")
 
-    try:
-        penalty_team2_scores = (
-            [int(score) for score in self.penalty_team2.split(',')]
-            if self.penalty_team2 else []
-        )
-    except ValueError:
-        penalty_team2_scores = []
+        # Parse penalty scores for both teams
+        penalty_team1_scores = parse_penalty_scores(self.penalty_team1)
+        penalty_team2_scores = parse_penalty_scores(self.penalty_team2)
 
-    # Calculate total penalty goals
-    team1_penalty_goals = sum(penalty_team1_scores)
-    team2_penalty_goals = sum(penalty_team2_scores)
+        # Calculate total penalty goals
+        team1_penalty_goals = sum(penalty_team1_scores)
+        team2_penalty_goals = sum(penalty_team2_scores)
 
-    # Determine the winner
-    if self.score_team1 + team1_penalty_goals > self.score_team2 + team2_penalty_goals:
-        return self.team1.name
-    elif self.score_team1 + team1_penalty_goals < self.score_team2 + team2_penalty_goals:
-        return self.team2.name
-    else:
-        return "Draw"
+        # Determine the winner
+        total_team1_score = self.score_team1 + team1_penalty_goals
+        total_team2_score = self.score_team2 + team2_penalty_goals
+
+        if total_team1_score > total_team2_score:
+            return self.team1.name
+        elif total_team1_score < total_team2_score:
+            return self.team2.name
+        else:
+            return "Draw"

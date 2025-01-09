@@ -38,7 +38,10 @@ class MatchAdmin(admin.ModelAdmin):
         'penalty_team2'
     )
     def save_model(self, request, obj, form, change):
-        if obj.is_penalty:
-            if not obj.penalty_team1 or not obj.penalty_team2:
-                self.message_user(request, "Penalty details are required for both teams.", level="error")
-        super().save_model(request, obj, form, change)
+        try:
+            if obj.is_penalty:
+                [int(score.strip()) for score in obj.penalty_team1.strip("[]").split(',')]
+                [int(score.strip()) for score in obj.penalty_team2.strip("[]").split(',')]
+            super().save_model(request, obj, form, change)
+        except ValueError:
+            self.message_user(request, "Invalid penalty data format. Use comma-separated integers.", level="error")

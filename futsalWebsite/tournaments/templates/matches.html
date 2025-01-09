@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% load static %}
-
 <div class="container mt-5">
     <h1 class="text-center">Matches</h1>
     <table class="table table-striped table-bordered">
@@ -22,27 +20,19 @@
                     {% if match.is_completed %}
                         ({{ match.score_team1 }} - {{ match.score_team2 }})
                         {% if match.is_penalty %}
-                            <div>
-                                <strong>Penalty:</strong>
-                                <br>
-                                <span>{{ match.team1 }}:</span>
-                                {% for penalty in match.penalty_team1 %}
-                                    {% if penalty == '1' %}
-                                        <span class="badge bg-success rounded-circle" style="width: 10px; height: 10px;"> </span> <!-- Goal -->
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-circle" style="width: 10px; height: 10px;"> </span> <!-- Miss -->
-                                    {% endif %}
-                                {% endfor %}
-                                <br>
-                                <span>{{ match.team2 }}:</span>
-                                {% for penalty in match.penalty_team2 %}
-                                    {% if penalty == '1' %}
-                                        <span class="badge bg-success rounded-circle" style="width: 10px; height: 10px;"> </span> <!-- Goal -->
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-circle" style="width: 10px; height: 10px;"> </span> <!-- Miss -->
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                        <div>
+                            <strong>Penalty:</strong>
+                            <br>
+                            <span>{{ match.team1 }}:</span>
+                            {% for penalty in match.penalty_team1_list %}
+                                <span class="badge {% if penalty == '1' %}bg-success{% else %}bg-danger{% endif %} rounded-circle" style="width: 12px; height: 12px;"></span>
+                            {% endfor %}
+                            <br>
+                            <span>{{ match.team2 }}:</span>
+                            {% for penalty in match.penalty_team2_list %}
+                                <span class="badge {% if penalty == '1' %}bg-success{% else %}bg-danger{% endif %} rounded-circle" style="width: 12px; height: 12px;"></span>
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     {% else %}
                         <span class="text-muted">Not yet played</span>
@@ -53,11 +43,11 @@
                     {% if match.status == "Completed" %}
                         <span class="badge bg-success">{{ match.status }}</span>
                         <br>
-                        <strong>Winner:</strong> 
-                        {% if match.get_winner == "Draw" %}
+                        <strong>Winner:</strong>
+                        {% if match.winner == "Draw" %}
                             <span class="text-muted">Draw</span>
                         {% else %}
-                            {{ match.get_winner }}
+                            {{ match.winner }}
                         {% endif %}
                     {% elif match.status == "Ongoing" %}
                         <span class="badge bg-primary">{{ match.status }}</span>
@@ -65,14 +55,10 @@
                         <span class="badge bg-warning">{{ match.status }}</span>
                     {% endif %}
                 </td>
-                
-                
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
     <a class="btn btn-primary" href="/">Back to Home</a>
 </div>
-
 {% endblock %}

@@ -14,12 +14,18 @@ from .models import Match
 def matches(request):
     matches = Match.objects.all()
     for match in matches:
-        # Split penalty data into lists if penalties exist
-        if match.penalty_team1:
-            match.penalty_team1 = match.penalty_team1.split(',')  # Split on commas
-        if match.penalty_team2:
-            match.penalty_team2 = match.penalty_team2.split(',')
+        # Parse penalties for each match
+        match.penalty_team1_list = (
+            match.penalty_team1.strip("[]").split(',') if match.penalty_team1 else []
+        )
+        match.penalty_team2_list = (
+            match.penalty_team2.strip("[]").split(',') if match.penalty_team2 else []
+        )
+        match.winner = match.get_winner()  # Determine the winner
     return render(request, 'matches.html', {'matches': matches})
+
+
+
 # Teams View
 def teams(request):
     teams = Team.objects.all()
