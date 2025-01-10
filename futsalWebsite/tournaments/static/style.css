@@ -4,18 +4,4 @@
     z-index: 1020; /* Ensure it stays above other elements */
 }
 
-.badge {
-    display: inline-block;
-    text-align: center;
-    vertical-align: middle;
-}
-.rounded-circle {
-    display: inline-block;
-    border-radius: 50%;
-}
-.bg-success {
-    background-color: #28a745 !important;
-}
-.bg-danger {
-    background-color: #dc3545 !important;
-}
+

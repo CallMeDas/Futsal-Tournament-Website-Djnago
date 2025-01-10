@@ -16,13 +16,18 @@ def matches(request):
     for match in matches:
         # Parse penalties for each match
         match.penalty_team1_list = (
-            match.penalty_team1.strip("[]").split(',') if match.penalty_team1 else []
+            [penalty.strip() for penalty in match.penalty_team1.strip("[]").split(',')]
+            if match.penalty_team1
+            else []
         )
         match.penalty_team2_list = (
-            match.penalty_team2.strip("[]").split(',') if match.penalty_team2 else []
+            [penalty.strip() for penalty in match.penalty_team2.strip("[]").split(',')]
+            if match.penalty_team2
+            else []
         )
         match.winner = match.get_winner()  # Determine the winner
     return render(request, 'matches.html', {'matches': matches})
+
 
 
 

@@ -25,12 +25,20 @@
                             <br>
                             <span>{{ match.team1 }}:</span>
                             {% for penalty in match.penalty_team1_list %}
-                                <span class="badge {% if penalty == '1' %}bg-success{% else %}bg-danger{% endif %} rounded-circle" style="width: 12px; height: 12px;"></span>
+                            {% if penalty == '1' %}
+                            <span class="badge bg-success">✔</span>
+                        {% else %}
+                        <span class="badge bg-danger">✘</span>
+                        {% endif %}
                             {% endfor %}
                             <br>
                             <span>{{ match.team2 }}:</span>
                             {% for penalty in match.penalty_team2_list %}
-                                <span class="badge {% if penalty == '1' %}bg-success{% else %}bg-danger{% endif %} rounded-circle" style="width: 12px; height: 12px;"></span>
+                            {% if penalty == '1' %}
+                            <span class="badge bg-success">✔</span>
+                        {% else %}
+                        <span class="badge bg-danger">✘</span>
+                        {% endif %}
                             {% endfor %}
                         </div>
                         {% endif %}
