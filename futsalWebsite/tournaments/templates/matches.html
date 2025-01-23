@@ -15,9 +15,17 @@
         <tbody>
             {% for match in matches %}
             <tr>
-                <td>{{ match.team1 }} vs {{ match.team2 }}</td>
                 <td>
-                    {% if match.is_completed %}
+                    {% if match.is_bypass %}
+                        {{ match.bypass_winner.name }} (Bypass)
+                    {% else %}
+                        {{ match.team1 }} vs {{ match.team2 }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if match.is_bypass %}
+                        <span class="text-info">Bypass - No scores</span>
+                    {% elif match.is_completed %}
                         ({{ match.score_team1 }} - {{ match.score_team2 }})
                         {% if match.is_penalty %}
                         <div>
@@ -25,20 +33,20 @@
                             <br>
                             <span>{{ match.team1 }}:</span>
                             {% for penalty in match.penalty_team1_list %}
-                            {% if penalty == '1' %}
-                            <span class="badge bg-success">✔</span>
-                        {% else %}
-                        <span class="badge bg-danger">✘</span>
-                        {% endif %}
+                                {% if penalty == '1' %}
+                                <span class="badge bg-success">✔</span>
+                                {% else %}
+                                <span class="badge bg-danger">✘</span>
+                                {% endif %}
                             {% endfor %}
                             <br>
                             <span>{{ match.team2 }}:</span>
                             {% for penalty in match.penalty_team2_list %}
-                            {% if penalty == '1' %}
-                            <span class="badge bg-success">✔</span>
-                        {% else %}
-                        <span class="badge bg-danger">✘</span>
-                        {% endif %}
+                                {% if penalty == '1' %}
+                                <span class="badge bg-success">✔</span>
+                                {% else %}
+                                <span class="badge bg-danger">✘</span>
+                                {% endif %}
                             {% endfor %}
                         </div>
                         {% endif %}
@@ -48,7 +56,12 @@
                 </td>
                 <td>{{ match.date }}</td>
                 <td>
-                    {% if match.status == "Completed" %}
+                    {% if match.is_bypass %}
+                        <span class="badge bg-secondary">Bypass</span>
+                        <br>
+                        <strong>Winner:</strong>
+                         {{ match.bypass_winner.name }}
+                    {% elif match.status == "Completed" %}
                         <span class="badge bg-success">{{ match.status }}</span>
                         <br>
                         <strong>Winner:</strong>

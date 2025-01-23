@@ -21,9 +21,10 @@ class PlayerAdmin(admin.ModelAdmin):
     list_filter = ('team',)
 
 # Match Admin
+
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('team1', 'team2', 'date', 'round', 'status', 'is_completed', 'is_penalty')
+    list_display = ('team1', 'team2', 'date', 'round', 'status', 'is_completed', 'is_penalty', 'is_bypass')
     fields = (
         'team1', 
         'team2', 
@@ -32,11 +33,14 @@ class MatchAdmin(admin.ModelAdmin):
         'status', 
         'is_completed', 
         'is_penalty', 
-        'score_team1',  # Include this field
-        'score_team2',  # Include this field
+        'score_team1',  
+        'score_team2',  
         'penalty_team1', 
-        'penalty_team2'
+        'penalty_team2',
+        'is_bypass',  # New field
+        'bypass_winner'  # New field
     )
+
     def save_model(self, request, obj, form, change):
         try:
             if obj.is_penalty:
