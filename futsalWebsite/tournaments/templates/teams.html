@@ -11,7 +11,10 @@
         <div class="col-md-4">
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Team Name: {{ team.name | capfirst}}</h5>
+                    <a href="/teams/{{ team.team_slug }}/">
+                        <h5 class="card-title">Team Name: {{ team.name | capfirst }}</h5>
+                    </a>
+                    
                     <p class="card-text">Capain Name: {{ team.captain_name | capfirst}}</p>
                     <p class="card-text">Phone No: {{ team.captain_phone_number }}</p>
                 </div>

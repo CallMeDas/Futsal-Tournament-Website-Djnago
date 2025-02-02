@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 # from django.db import models
+from autoslug  import AutoSlugField
 
 # Team Model
 class Team(models.Model):
@@ -8,6 +9,7 @@ class Team(models.Model):
     captain_name = models.CharField(max_length=100)
     captain_phone_number = models.CharField(max_length=15)
     points = models.IntegerField(default=0)
+    teams_slug = AutoSlugField(populate_from= 'name', unique= True, null= True, default=None)
 
     def __str__(self):
         return self.name

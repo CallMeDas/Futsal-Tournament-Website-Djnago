@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Team, Match
 from collections import defaultdict
 
@@ -37,9 +37,15 @@ def matches(request):
 
 
 # Teams View
-def teams(request):
+# View for listing all teams
+def teams_list(request):
     teams = Team.objects.all()
     return render(request, 'teams.html', {'teams': teams})
+
+# View for individual team details
+def teams(request, slug):
+    team = get_object_or_404(Team, team_slug=slug)  # Fetch team by slug
+    return render(request, 'team_detail.html', {'team': team})
 
 # Points Table View
 def points_table(request):
