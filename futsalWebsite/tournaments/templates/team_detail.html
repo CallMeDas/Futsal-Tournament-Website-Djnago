@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="container mt-5">
+    <h1 class="text-center">{{ team.name | capfirst }}</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <!-- <h5 class="card-title">Team Name: {{ team.name | capfirst }}</h5> -->
+            <p class="card-text"><strong>Captain:</strong> {{ team.captain_name | capfirst }}</p>
+            <p class="card-text"><strong>Captain's Phone:</strong> {{ team.captain_phone_number }}</p>
+            <!-- <p class="card-text"><strong>Points:</strong> {{ team.points }}</p> -->
+        </div>
+    </div>
+
+    <h2 class="text-center mt-4">Players</h2>
+    <div class="row">
+        {% if team.players.all %}
+            {% for player in team.players.all %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ player.name | capfirst }}</h5>
+                        <p class="card-text"><strong>Phone:</strong> {{ player.phone_number }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">No players have been added to this team yet.</p>
+        {% endif %}
+    </div>
+
+    <a class="btn btn-primary mt-3" href="/teams/">Back to Teams</a>
+</div>
+
+{% endblock %}

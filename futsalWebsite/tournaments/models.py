@@ -9,7 +9,7 @@ class Team(models.Model):
     captain_name = models.CharField(max_length=100)
     captain_phone_number = models.CharField(max_length=15)
     points = models.IntegerField(default=0)
-    teams_slug = AutoSlugField(populate_from= 'name', unique= True, null= True, default=None)
+    team_slug = AutoSlugField(populate_from= 'name', unique= True, null= True, default=None)
 
     def __str__(self):
         return self.name
@@ -26,8 +26,6 @@ class Player(models.Model):
 
 
 # models.py
-# models.py
-
 class Match(models.Model):
     STATUS_CHOICES = [
         ('Upcoming', 'Upcoming'),

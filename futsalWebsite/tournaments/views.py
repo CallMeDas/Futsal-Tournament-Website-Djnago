@@ -12,7 +12,6 @@ from django.shortcuts import render
 from .models import Match
 
 # views.py
-
 def matches(request):
     matches = Match.objects.all()
     for match in matches:
@@ -33,9 +32,6 @@ def matches(request):
     return render(request, 'matches.html', {'matches': matches})
 
 
-
-
-
 # Teams View
 # View for listing all teams
 def teams_list(request):
@@ -44,7 +40,8 @@ def teams_list(request):
 
 # View for individual team details
 def teams(request, slug):
-    team = get_object_or_404(Team, team_slug=slug)  # Fetch team by slug
+    team = get_object_or_404(Team, team_slug=slug)
+    print(team)
     return render(request, 'team_detail.html', {'team': team})
 
 # Points Table View
