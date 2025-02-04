@@ -11,8 +11,8 @@
         <div class="col-md-4">
             <div class="card mb-3">
                 <div class="card-body">
-                    <a href="/teams/{{ team.team_slug }}/">
-                        <h5 class="card-title">Team Name: {{ team.name | capfirst }}</h5>
+                    <a style="text-decoration: none;" href="/teams/{{ team.team_slug }}/">
+                        <h5 style="color: black;" class="card-title">Team Name: {{ team.name | capfirst }}</h5>
                     </a>
                     
                     <p class="card-text">Capain Name: {{ team.captain_name | capfirst}}</p>
