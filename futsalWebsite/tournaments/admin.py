@@ -37,8 +37,8 @@ class MatchAdmin(admin.ModelAdmin):
         'score_team2',  
         'penalty_team1', 
         'penalty_team2',
-        'is_bypass',  # New field
-        'bypass_winner'  # New field
+        'is_bypass', 
+        'bypass_winner' 
     )
 
     def save_model(self, request, obj, form, change):
@@ -47,5 +47,6 @@ class MatchAdmin(admin.ModelAdmin):
                 [int(score.strip()) for score in obj.penalty_team1.strip("[]").split(',')]
                 [int(score.strip()) for score in obj.penalty_team2.strip("[]").split(',')]
             super().save_model(request, obj, form, change)
+            obj.update_team_points()
         except ValueError:
             self.message_user(request, "Invalid penalty data format. Use comma-separated integers.", level="error")

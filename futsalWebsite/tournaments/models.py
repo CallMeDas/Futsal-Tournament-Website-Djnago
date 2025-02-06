@@ -40,8 +40,8 @@ class Match(models.Model):
         ('Final', 'Final'),
     ]
 
-    team1 = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='home_matches')
-    team2 = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='away_matches', null=True, blank=True)  # Allow null for bypass
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='home_matches')
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='away_matches', null=True, blank=True)
     date = models.DateTimeField()
     score_team1 = models.IntegerField(default=0)
     score_team2 = models.IntegerField(default=0)
@@ -49,26 +49,27 @@ class Match(models.Model):
     is_penalty = models.BooleanField(default=False)
     penalty_team1 = models.CharField(max_length=100, blank=True, null=True)
     penalty_team2 = models.CharField(max_length=100, blank=True, null=True)
-    is_bypass = models.BooleanField(default=False)  # New field for bypass matches
-    bypass_winner = models.ForeignKey('Team', on_delete=models.CASCADE, null=True, blank=True, related_name='bypass_winner')  # Winner in case of bypass
+    is_bypass = models.BooleanField(default=False)
+    bypass_winner = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name='bypass_winner')
 
     round = models.CharField(max_length=20, choices=ROUND_CHOICES, default='Group Stage')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Upcoming')
 
-    def clean(self):
-        if self.is_penalty:
-            if not self.penalty_team1 or not self.penalty_team2:
-                raise ValidationError("Penalty data must be provided for both teams if penalties apply.")
-            try:
-                [int(score.strip()) for score in self.penalty_team1.strip("[]").split(',')]
-                [int(score.strip()) for score in self.penalty_team2.strip("[]").split(',')]
-            except ValueError:
-                raise ValidationError("Penalty data must be a comma-separated list of integers.")
-        else:
-            self.penalty_team1 = None
-            self.penalty_team2 = None
+    def update_team_points(self):
+        """Update points for the winning team."""
+        if self.is_completed:
+            winner = self.get_winner()
+            if winner and winner != "Draw":
+                winning_team = Team.objects.get(name=winner)
+                winning_team.points += 2/2
+                winning_team.save()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.update_team_points()
 
     def get_winner(self):
+        """Determine the winner based on scores or penalty shootout."""
         if self.is_bypass:
             return self.bypass_winner.name if self.bypass_winner else "Bypass Winner Not Set"
 
