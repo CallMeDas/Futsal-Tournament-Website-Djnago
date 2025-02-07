@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Team, Match
+from .models import Team, Match, Gallery
 from collections import defaultdict
 
 # Home View
@@ -50,8 +50,9 @@ def points_table(request):
     return render(request, 'points_table.html', {'teams': teams})
 
 # Gallery View
-def gallary(request):
-    return render(request, 'gallary.html')
+def gallery(request):
+    images = Gallery.objects.all().order_by('-uploaded_at')
+    return render(request, 'gallery.html', {'images': images})
 
 # Contact View
 def contact(request):

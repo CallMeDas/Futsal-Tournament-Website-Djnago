@@ -99,3 +99,12 @@ class Match(models.Model):
             return self.team2.name
         else:
             return "Draw"
+        
+
+class Gallery(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    image = models.ImageField(upload_to='gallery/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title if self.title else "Gallery Image"

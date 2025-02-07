@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Team, Player, Match
+from .models import Team, Player, Match, Gallery
 
 # Inline for Player in Team
 class PlayerInline(admin.TabularInline):
@@ -50,3 +50,10 @@ class MatchAdmin(admin.ModelAdmin):
             obj.update_team_points()
         except ValueError:
             self.message_user(request, "Invalid penalty data format. Use comma-separated integers.", level="error")
+
+
+
+@admin.register(Gallery)
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'uploaded_at')
+    search_fields = ('title',)
