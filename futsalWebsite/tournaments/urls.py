@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import contact
 
 urlpatterns = [
     path('', views.home),
@@ -8,5 +9,5 @@ urlpatterns = [
     path('teams/<slug:slug>/', views.teams, name="team_detail"),  
     path('points_table/', views.points_table),
     path('gallery/', views.gallery),
-    path('contact/', views.contact),
+    path("contact/", contact, name="contact")
 ]

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 # from django.db import models
 from autoslug  import AutoSlugField
+from django.db import models
 
 # Team Model
 class Team(models.Model):
@@ -108,3 +109,18 @@ class Gallery(models.Model):
 
     def __str__(self):
         return self.title if self.title else "Gallery Image"
+
+
+
+
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"

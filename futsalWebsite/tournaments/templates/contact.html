@@ -1,17 +1,35 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-{% load static %}
+<div class="container mt-5">
+    <h2 class="text-center">Contact Us</h2>
+    <p class="text-center">Feel free to reach out for any inquiries!</p>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
-
-
-
-
-
-
-
-
-
-
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            {{ form.name }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Your Email</label>
+            {{ form.email }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Subject</label>
+            {{ form.subject }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Message</label>
+            {{ form.message }}
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+</div>
 {% endblock %}

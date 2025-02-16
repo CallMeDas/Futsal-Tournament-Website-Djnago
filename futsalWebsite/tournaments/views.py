@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Team, Match, Gallery
 from collections import defaultdict
+from django.contrib import messages
+from .forms import ContactForm
 
 # Home View
 def home(request):
@@ -16,7 +18,7 @@ def matches(request):
     matches = Match.objects.all()
     for match in matches:
         if match.is_bypass:
-            match.winner = match.get_winner()  # Bypass winner
+            match.winner = match.get_winner()
         else:
             match.penalty_team1_list = (
                 [penalty.strip() for penalty in match.penalty_team1.strip("[]").split(',')]
@@ -41,7 +43,6 @@ def teams_list(request):
 # View for individual team details
 def teams(request, slug):
     team = get_object_or_404(Team, team_slug=slug)
-    print(team)
     return render(request, 'team_detail.html', {'team': team})
 
 # Points Table View
@@ -56,4 +57,13 @@ def gallery(request):
 
 # Contact View
 def contact(request):
-    return render(request, 'contact.html')
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect("contact")
+    else:
+        form = ContactForm()
+
+    return render(request, "contact.html", {"form": form})
