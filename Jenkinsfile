@@ -12,7 +12,7 @@ pipeline{
         stage('Set up VENV'){
             steps{
                 bat 'python -m venv %VENV%'
-                bat '%VENV%\\Scripts\\python -m install --updrage pip'
+                bat '%VENV%\\Scripts\\python -m install --upgrade pip'
                 bat '%VENV%\\Scripts\\pip install -r requirement.txt'
             }
 
