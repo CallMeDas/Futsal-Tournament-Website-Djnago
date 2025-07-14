@@ -20,7 +20,12 @@ pipeline {
 
         stage('Run the test') {
             steps {
-                bat 'cd tournaments && ..\\%VENV%\\Scripts\\python manage.py test'
+            bat '''
+            cd tournaments
+            ..\\venv\\Scripts\\python manage.py migrate
+            ..\\venv\\Scripts\\python manage.py collectstatic --noinput
+            ..\\venv\\Scripts\\python manage.py test
+        '''
             }
         }
     }
