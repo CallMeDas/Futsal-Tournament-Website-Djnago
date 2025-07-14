@@ -29,9 +29,10 @@ pipeline {
         // }
                 stage('Run Django Server') {
             steps {
-                bat '''
-                    start /B %VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
-                '''
+            bat '''
+            cd futsalWebsite
+            start /B ..\\venv\\Scripts\\python manage.py runserver 0.0.0.0:8000
+        '''
             }
         }
     }
