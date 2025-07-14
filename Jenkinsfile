@@ -20,7 +20,7 @@ pipeline {
 
         stage('Run the test') {
             steps {
-                bat '%VENV%\\Scripts\\python manage.py test'
+                bat 'cd tournaments && ..\\%VENV%\\Scripts\\python manage.py test'
             }
         }
     }
