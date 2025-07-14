@@ -6,7 +6,7 @@ pipeline{
     stages{
         stage('check out'){
             steps{
-                git btanch: 'main', url: 'https://github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git'
+                git branch: 'main', url: 'https://github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git'
             }
         }
         stage('Set up VENV'){
