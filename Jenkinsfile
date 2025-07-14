@@ -18,14 +18,13 @@ pipeline {
             }
         }
 
-        stage('Run the test') {
+        stage('Run Django Commands') {
             steps {
-            bat '''
-            cd tournaments
-            ..\\venv\\Scripts\\python manage.py migrate
-            ..\\venv\\Scripts\\python manage.py collectstatic --noinput
-            ..\\venv\\Scripts\\python manage.py test
-        '''
+                bat '''
+                    %VENV%\\Scripts\\python tournaments\\manage.py migrate
+                    %VENV%\\Scripts\\python tournaments\\manage.py collectstatic --noinput
+                    %VENV%\\Scripts\\python tournaments\\manage.py test
+                '''
             }
         }
     }
