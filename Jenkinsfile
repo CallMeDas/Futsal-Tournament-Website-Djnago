@@ -31,10 +31,11 @@ stage('Run Django Server') {
     steps {
         bat '''
             cd futsalWebsite
-            start cmd /k ..\\venv\\Scripts\\python manage.py runserver
+            ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
         '''
     }
 }
+
 
     }
 }
