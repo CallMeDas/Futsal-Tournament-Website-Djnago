@@ -27,13 +27,14 @@ pipeline {
         //         '''
         //     }
         // }
-                stage('Run Django Server') {
-            steps {
-            bat '''
+stage('Run Django Server') {
+    steps {
+        bat '''
             cd futsalWebsite
-            start /B ..\\venv\\Scripts\\python manage.py runserver
+            start cmd /k ..\\venv\\Scripts\\python manage.py runserver
         '''
-            }
-        }
+    }
+}
+
     }
 }
