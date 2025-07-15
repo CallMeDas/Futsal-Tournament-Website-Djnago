@@ -31,7 +31,7 @@ pipeline {
             steps {
             bat '''
             cd futsalWebsite
-            start /B ..\\venv\\Scripts\\python manage.py runserver 0.0.0.0:8000
+            start /B ..\\venv\\Scripts\\python manage.py runserver
         '''
             }
         }
