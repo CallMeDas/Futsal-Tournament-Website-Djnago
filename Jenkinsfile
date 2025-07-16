@@ -28,12 +28,11 @@ pipeline {
         //     }
         // }
 
-        stage('Run Server on Port 8000') {
+        stage('Start Dev Server') {
             steps {
                 bat '''
                     cd futsalWebsite
-                    start /B ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
-                    timeout /T 10
+                    start /B ..\\venv\\Scripts\\python manage.py runserver 0.0.0.0:8000
                 '''
             }
         }
