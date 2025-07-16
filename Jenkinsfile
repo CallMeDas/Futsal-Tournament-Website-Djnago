@@ -27,14 +27,15 @@ pipeline {
         //         '''
         //     }
         // }
-stage('Run Django Server') {
+stage('Run Dev Server') {
     steps {
         bat '''
             cd futsalWebsite
-            ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
+            start /B ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
         '''
     }
 }
+
         stage('Approval') {
             steps {
                 input message: "Approve to deploy production server on port 8001?", ok: "Deploy"
