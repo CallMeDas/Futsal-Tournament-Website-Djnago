@@ -27,14 +27,16 @@ pipeline {
         //         '''
         //     }
         // }
-stage('Run Dev Server') {
-    steps {
-        bat '''
-            cd futsalWebsite
-            start /B ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
-        '''
-    }
-}
+
+        stage('Run Server on Port 8000') {
+            steps {
+                bat '''
+                    cd futsalWebsite
+                    start /B ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8000
+                    timeout /T 10
+                '''
+            }
+        }
 
         stage('Approval') {
             steps {
