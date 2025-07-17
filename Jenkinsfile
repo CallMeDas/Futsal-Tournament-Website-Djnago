@@ -37,11 +37,14 @@ pipeline {
             }
         }
 
-        stage('Approval') {
-            steps {
-                input message: "Approve to deploy production server on port 8001?", ok: "Deploy"
-            }
+stage('Approval') {
+    steps {
+        script {
+            input message: "Approve to deploy production server on port 8001?", ok: "Deploy"
         }
+    }
+}
+
 
                 stage('Run Production Server') {
             steps {
