@@ -1,60 +1,47 @@
 pipeline {
     agent any
     environment {
-        VENV = 'venv'
+        GIT_REPO = 'https://github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git'
     }
     stages {
-        stage('Check Out') {
+        stage('Deploy to Staging') {
             steps {
-                git branch: 'main', url: 'https://github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git'
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no user@vm1-ip << EOF
+                        pkill -f "manage.py runserver" || true
+                        rm -rf webapp || true
+                        git clone https://${GIT_USER}:${GIT_PAT}@github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git webapp
+                        cd webapp
+                        pip3 install -r requirement.txt
+                        nohup python3 manage.py runserver 0.0.0.0:8000 > app.log 2>&1 &
+                    EOF
+                    """
+                }
             }
         }
 
-        stage('Set up VENV') {
+        stage('Manual Approval') {
             steps {
-                bat 'python -m venv %VENV%'
-                bat '%VENV%\\Scripts\\python -m pip install --upgrade pip'
-                bat '%VENV%\\Scripts\\pip install -r requirement.txt'
+                input message: 'Deploy to Production?', ok: 'Yes, Deploy'
             }
         }
 
-        // stage('Run Django Commands') {
-        //     steps {
-        //         bat '''
-        //             %VENV%\\Scripts\\python tournaments\\manage.py migrate
-        //             %VENV%\\Scripts\\python tournaments\\manage.py collectstatic --noinput
-        //             %VENV%\\Scripts\\python tournaments\\manage.py test
-        //         '''
-        //     }
-        // }
-
-        stage('Start Dev Server') {
+        stage('Deploy to Production') {
             steps {
-                bat '''
-                    cd futsalWebsite
-                    start /B ..\\venv\\Scripts\\python manage.py runserver 0.0.0.0:8000
-                '''
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no user@vm2-ip << EOF
+                        pkill -f "manage.py runserver" || true
+                        rm -rf webapp || true
+                        git clone https://${GIT_USER}:${GIT_PAT}@github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git webapp
+                        cd webapp
+                        pip3 install -r requirement.txt
+                        nohup python3 manage.py runserver 0.0.0.0:8001 > app.log 2>&1 &
+                    EOF
+                    """
+                }
             }
         }
-
-stage('Approval') {
-    steps {
-        script {
-            input message: 'Approve to deploy production server on port 8001?', ok: 'Deploy'
-        }
-    }
-}
-
-
-                stage('Run Production Server') {
-            steps {
-                bat '''
-                    cd futsalWebsite
-                    start /B ..\\%VENV%\\Scripts\\python manage.py runserver 0.0.0.0:8001
-                '''
-            }
-        }
-
-
     }
 }
