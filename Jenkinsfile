@@ -10,8 +10,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
                     bat '''
-                    rm -rf webapp || true
-                    git clone https://${GIT_USER}:${GIT_PAT}@github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git webapp
+                    if exist webapp (rmdir /s /q webapp)
+                    git clone https://%GIT_USER%:%GIT_PAT%@github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git webapp
                     '''
                 }
             }
@@ -20,10 +20,10 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 bat '''
-                pkill -f "python3 manage.py runserver" || true
+                taskkill /F /IM python.exe > nul 2>&1
                 cd webapp
-                pip3 install -r requirement.txt
-                nohup python3 manage.py runserver 0.0.0.0:8000 > app.log 2>&1 &
+                pip install -r requirement.txt
+                start /B python manage.py runserver 0.0.0.0:8000
                 '''
             }
         }
@@ -37,9 +37,9 @@ pipeline {
         stage('Deploy to Production') {
             steps {
                 bat '''
-                pkill -f "python3 manage.py runserver" || true
+                taskkill /F /IM python.exe > nul 2>&1
                 cd webapp
-                nohup python3 manage.py runserver 0.0.0.0:8001 > prod.log 2>&1 &
+                start /B python manage.py runserver 0.0.0.0:8001
                 '''
             }
         }
