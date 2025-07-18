@@ -43,5 +43,12 @@ pipeline {
                 '''
             }
         }
+
+        
+        stage('testin to VM2') {
+            steps {
+                input message: 'Is working in VM2?'
+            }
+        }
     }
 }
