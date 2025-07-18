@@ -9,7 +9,7 @@ pipeline {
         stage('Clone Repo') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PAT')]) {
-                    sh '''
+                    bat '''
                     rm -rf webapp || true
                     git clone https://${GIT_USER}:${GIT_PAT}@github.com/CallMeDas/Futsal-Tournament-Website-Djnago.git webapp
                     '''
@@ -19,7 +19,7 @@ pipeline {
 
         stage('Deploy to Staging') {
             steps {
-                sh '''
+                bat '''
                 pkill -f "python3 manage.py runserver" || true
                 cd webapp
                 pip3 install -r requirement.txt
@@ -36,7 +36,7 @@ pipeline {
 
         stage('Deploy to Production') {
             steps {
-                sh '''
+                bat '''
                 pkill -f "python3 manage.py runserver" || true
                 cd webapp
                 nohup python3 manage.py runserver 0.0.0.0:8001 > prod.log 2>&1 &
