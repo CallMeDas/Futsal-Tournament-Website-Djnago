@@ -21,8 +21,8 @@ pipeline {
             steps {
                 bat '''
                 taskkill /F /IM python.exe > nul 2>&1
-                cd webapp
-                pip install -r requirement.txt
+                cd webapp\\futsalWebsite
+                pip install -r ..\\requirement.txt
                 start /B python manage.py runserver 0.0.0.0:8000
                 '''
             }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 bat '''
                 taskkill /F /IM python.exe > nul 2>&1
-                cd webapp
+                cd webapp\\futsalWebsite
                 start /B python manage.py runserver 0.0.0.0:8001
                 '''
             }
